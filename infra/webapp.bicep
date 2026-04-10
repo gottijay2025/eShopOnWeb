@@ -12,10 +12,33 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   }
   sku: {
     name: sku
+    tier: 'Free'
   }
 }
 resource appService 'Microsoft.Web/sites@2022-09-01' = {
   name: webAppName
+  kind: 'app'
+  location: location
+  properties: {
+    serverFarmId: appServicePlan.id
+    siteConfig: {
+      linuxFxVersion: 'DOTNETCORE|8.0'
+      appSettings: [
+        {
+          name: 'ASPNETCORE_ENVIRONMENT'
+          value: 'Development'
+        }
+        {
+          name: 'UseOnlyInMemoryDatabase'
+          value: 'true'
+        }
+      ]
+    }
+  }
+}
+// ✅ Second Web App (NEW)
+resource appService2 'Microsoft.Web/sites@2022-09-01' = {
+  name: '${webAppName}-second'
   kind: 'app'
   location: location
   properties: {
