@@ -1,5 +1,7 @@
+original bicep:
+
 param webAppName string // = uniqueString(resourceGroup().id) // unique String gets created from az cli instructions
-param sku string = 'F1' // The SKU of App Service Plan 1614826912
+param sku string = 'S1' // The SKU of App Service Plan 1614826912
 param location string = resourceGroup().location
 
 var appServicePlanName = toLower('AppServicePlan-${webAppName}')
@@ -12,33 +14,10 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   }
   sku: {
     name: sku
-    tier: 'Free'
   }
 }
 resource appService 'Microsoft.Web/sites@2022-09-01' = {
   name: webAppName
-  kind: 'app'
-  location: location
-  properties: {
-    serverFarmId: appServicePlan.id
-    siteConfig: {
-      linuxFxVersion: 'DOTNETCORE|8.0'
-      appSettings: [
-        {
-          name: 'ASPNETCORE_ENVIRONMENT'
-          value: 'Development'
-        }
-        {
-          name: 'UseOnlyInMemoryDatabase'
-          value: 'true'
-        }
-      ]
-    }
-  }
-}
-// ✅ Second Web App (NEW)
-resource appService2 'Microsoft.Web/sites@2022-09-01' = {
-  name: '${webAppName}-second'
   kind: 'app'
   location: location
   properties: {
